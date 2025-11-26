@@ -1,15 +1,15 @@
 package com.reserva.controller;
 
+import com.reserva.dto.FormularioReservaResponse;
 import com.reserva.model.Espacio;
 import com.reserva.service.EspacioService;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Controller
+@RestController
 public class FormularioReservaController {
 
     private final EspacioService espacioService;
@@ -19,10 +19,9 @@ public class FormularioReservaController {
     }
 
     @GetMapping("/reservas/formulario")
-    public String mostrarFormulario(
+    public FormularioReservaResponse mostrarFormulario(
             @RequestParam(name = "espacioId", required = false) Integer espacioId,
-            @RequestParam(name = "escuelaId", required = false) Integer escuelaId,
-            Model model) {
+            @RequestParam(name = "escuelaId", required = false) Integer escuelaId) {
         List<Espacio> espaciosDisponibles = espacioService.listarActivosPorEscuela(escuelaId);
 
         Espacio espacioSeleccionado = null;
@@ -34,12 +33,12 @@ public class FormularioReservaController {
 
         }
 
-        model.addAttribute("espacios", espaciosDisponibles);
-        model.addAttribute("espacioIdSeleccionado", espacioId);
-        model.addAttribute("espacioSeleccionDescripcion", espacioSeleccionado != null
-                ? espacioSeleccionado.getCodigo() + " - " + espacioSeleccionado.getNombre()
-                : null);
-
-        return "FormularioReserva";
-        }
+        return new FormularioReservaResponse(
+                espaciosDisponibles,
+                espacioId,
+                espacioSeleccionado != null
+                        ? espacioSeleccionado.getCodigo() + " - " + espacioSeleccionado.getNombre()
+                        : null
+        );
     }
+}

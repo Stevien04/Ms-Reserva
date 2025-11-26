@@ -1,13 +1,15 @@
 package com.reserva.controller;
 
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 
-@Controller
+import java.util.Map;
+
+@RestController
 public class InterfazEspaciosController {
 
     @GetMapping({"/", "/espacios"})
-    public String mostrarInterfaz() {
-        return "Interfazespacios";
-    }
+    public Map<String, String> mostrarInterfaz() {
+        return Map.of("mensaje", "Servicio disponible");
+}
 }
